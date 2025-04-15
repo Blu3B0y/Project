@@ -1,30 +1,26 @@
-server:
-  port: 8080
-
 spring:
   application:
-    name: api-gateway
+    name: ApiGateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
       routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates: [ Path=/api/auth/** ]
-        - id: event-service
-          uri: lb://EVENT-SERVICE
-          predicates: [ Path=/api/events/** ]
-        - id: payment-service
-          uri: lb://PAYMENT-SERVICE
-          predicates: [ Path=/api/payments/** ]
+        - id: event_service
+          uri: lb://EventService
+          predicates:
+            - Path=/api/events/**
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+        - id: user_service
+          uri: lb://UserService
+          predicates:
+            - Path=/api/users/**
 
+        - id: payment_service
+          uri: lb://PaymentService
+          predicates:
+            - Path=/api/payments/**
 
-
+      default-filters:
+        - name: AddRequestHeader
+          args:
+            name: X-Request-Foo
+            value: Bar
